@@ -8,7 +8,10 @@ die () {
 print_usage() {
   printf "Usage: createvhost [OPTIONS] [store-name]\n"
   printf "\n  -e"
-  printf "\n\t\tenable vhost after creation and restart apache"
+  printf "\n\tenable vhost after creation and restart apache"
+  printf "\n  -t"
+  printf "\n\tset TLD"
+  printf "\n\tdefault: nl"
   printf "\n"
 }
 
@@ -19,10 +22,12 @@ if [ $# -eq 0 ]
 fi
 
 AUTO_ENABLE=false
+TLD=nl
 
-while getopts 'e' flag; do
+while getopts 'et:' flag; do
   case "${flag}" in
     e) AUTO_ENABLE=true ;;
+    t) TLD=${OPTARG} ;;
     *) print_usage
        exit 1 ;;
   esac
@@ -38,13 +43,14 @@ SCRIPT_DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
 
 STORE_NAME="${@: -1}"
 SITES_AVAILABLE_DIR="/etc/apache2/sites-available"
-VHOST_FILENAME="${STORE_NAME}.nl.localhost"
+VHOST_FILENAME="${STORE_NAME}.${TLD}.localhost"
 VHOST_FILENAME_FULL="${VHOST_FILENAME}.conf"
 NEW_VHOST_PATH="${SITES_AVAILABLE_DIR}/${VHOST_FILENAME_FULL}"
 
 #create vhost
 sudo cp "${SCRIPT_DIR}/vhost.example" "${NEW_VHOST_PATH}"
 sudo sed -i -e "s/REPLACE_ME_PLS/$STORE_NAME/g" "${NEW_VHOST_PATH}"
+sudo sed -i -e "s/REPLACE_ME_TLD/$TLD/g" "${NEW_VHOST_PATH}"
 echo "Created ${STORE_NAME} at ${NEW_VHOST_PATH}"
 
 #enable vhost

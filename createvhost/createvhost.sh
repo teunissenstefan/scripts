@@ -24,7 +24,7 @@ fi
 AUTO_ENABLE=false
 TLD=nl
 
-while getopts 'et:' flag; do
+while getopts 'et:h' flag; do
   case "${flag}" in
     e) AUTO_ENABLE=true ;;
     t) TLD=${OPTARG} ;;

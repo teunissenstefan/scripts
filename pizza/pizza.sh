@@ -6,9 +6,9 @@ PIZZAY=0
 MAXY=1440
 while [ "$PIZZAY" -lt "$MAXY" ]
 do
-	echo $PIZZAX
-	i3-msg [title="pizzaimg"] move position $PIZZAX $PIZZAY
+	i3-msg [title="pizzaimg"] move position $PIZZAX $PIZZAY > /dev/null
 	PIZZAY=$((PIZZAY+5))
 	PIZZAX=$((PIZZAX+5))
+	sleep 0.01
 done
-i3-msg [title="pizzaimg"] kill
+i3-msg [title="pizzaimg"] kill > /dev/null
